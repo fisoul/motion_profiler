@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionProfile", "MotionProfile\MotionProfile.csproj", "{13654914-C328-405C-9E63-E8A0BCDAA6EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionProfile_Demo", "MotionProfile_Demo\MotionProfile_Demo.csproj", "{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRAutomat", "BRAutomat\BRAutomat.csproj", "{EC1E6B45-9AC9-4B32-AD15-BB4A5A3DAD7D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13654914-C328-405C-9E63-E8A0BCDAA6EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13654914-C328-405C-9E63-E8A0BCDAA6EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13654914-C328-405C-9E63-E8A0BCDAA6EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13654914-C328-405C-9E63-E8A0BCDAA6EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC1E6B45-9AC9-4B32-AD15-BB4A5A3DAD7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC1E6B45-9AC9-4B32-AD15-BB4A5A3DAD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC1E6B45-9AC9-4B32-AD15-BB4A5A3DAD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC1E6B45-9AC9-4B32-AD15-BB4A5A3DAD7D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
