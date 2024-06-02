@@ -3,7 +3,8 @@
         xmlns:vm="using:MotionProfile_DemoGUI.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:sc="clr-namespace:ScottPlot.Avalonia;assembly=ScottPlot.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
         x:Class="MotionProfile_DemoGUI.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
@@ -16,7 +17,16 @@
     </Design.DataContext>
 
     <StackPanel>
+        <sc:AvaPlot Height="400"></sc:AvaPlot>
+        <Button Height="50" HorizontalAlignment="Center">Refresh</Button>
+        <StackPanel Orientation="Horizontal" Height="80">
+            <TextBlock Text="{Binding P2.X}" Width="100"></TextBlock>
+            <TextBlock Text="{Binding P2.Y}"></TextBlock>
+            <TextBlock Text="{Binding P2.Y1}"></TextBlock>
+            <TextBlock Text="{Binding P2.Y2}"></TextBlock>
+        </StackPanel>
         <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding P1.X}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         
     </StackPanel>
 </Window>
