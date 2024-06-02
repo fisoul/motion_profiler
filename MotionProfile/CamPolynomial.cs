@@ -1,14 +1,23 @@
 ﻿namespace MotionProfile;
 
-public struct CamPolynomial()
+public struct CamPolynomial
 {
     public double a0, a1, a2, a3, a4, a5, a6;
     public double x_max;
 
+    public static Func<double, double> ToFunction(CamPolynomial poly)
+    {
+        return x => poly.a5 * Math.Pow(x, 5) + poly.a4 * Math.Pow(x, 4) + poly.a3 * Math.Pow(x, 3) + 
+                          poly.a2 * Math.Pow(x, 2) + poly.a1 * x + poly.a0;
+    }
+    
     public readonly override string ToString()
     {
         var result = "";
-
+        if (Math.Abs(a6) > 0)
+        {
+            result += (a6 > 0 ? " + " : " - ") + Math.Abs(a6).ToString(Math.Abs(a6) < 0.001 ? "0.###E+0" : "0.###") + "x^6";
+        }
         if (Math.Abs(a5) > 0)
         {
             result += (a5 > 0 ? " + " : " - ") + Math.Abs(a5).ToString(Math.Abs(a5) < 0.001 ? "0.###E+0" : "0.###") + "x^5";
@@ -34,28 +43,15 @@ public struct CamPolynomial()
             result += (a0 > 0 ? " + " : " - ") + Math.Abs(a0).ToString(Math.Abs(a0) < 0.001 ? "0.###E+0" : "0.###");
         }
 
-        if (result.Length > 0 && result[0] == '+')
+        if (result.Length <= 0) return "y = 0";
+        if (result[0] != ' ') return "y = " + result;
+        if (result[1] == '+')
         {
-            result = result.Substring(1);
-        }
-
-        if (result.Length > 0)
-        {
-            if (result[0] != ' ') return "y = " + result;
-            if (result[1] == '+')
-            {
-                result = result.Remove(0, 3);
-            }
-            else
-            {
-                result = result.Remove(0, 1);
-                result = result.Remove(1, 1);
-            }
+            return result.Remove(0, 3);
         }
         else
         {
-            return "y = 0";
+            return result.Remove(2, 1).Remove(0, 1);
         }
-        return "y = " + result;
     }
 }

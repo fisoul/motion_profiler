@@ -31,6 +31,11 @@ public static class CamProfiler
         return ret;
     }
 
+    public static (CamFixedPoint, CamFixedPoint) 计算3阶对称加速曲线(double ra)
+    {
+        return CalcSymmetricShift(ra, 3, 0);
+    }
+    
     public static (CamFixedPoint, CamFixedPoint) CalcSymmetricShift(double ra = 0.5, int order = 3, int direction = 0)
     {
         var p1 = new CamFixedPoint();

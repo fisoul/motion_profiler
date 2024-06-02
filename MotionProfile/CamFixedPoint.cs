@@ -17,6 +17,6 @@ public struct CamFixedPoint
 
     public readonly override string ToString()
     {
-        return $"x={X:F3}, y={Y:F3}, y1={Y1:F3}, y2={Y2:F3}";
+        return $"x={X:N3}, y={Y:N3}, y1={Y1:N3}, y2={Y2:N3}";
     }
 }

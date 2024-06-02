@@ -11,4 +11,8 @@
       <ProjectReference Include="..\MotionProfile\MotionProfile.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="ScottPlot" Version="5.0.34" />
+    </ItemGroup>
+
 </Project>
