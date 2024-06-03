@@ -66,7 +66,7 @@ public static class CamProfiler
                 break;
             
             case 4:
-
+                
                 break;
         }
         return direction == 0 ? (p1, p2) : (p2, p1);

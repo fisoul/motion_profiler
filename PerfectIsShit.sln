@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BRAutomat", "BRAutomat\BRAu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotionProfile_DemoGUI", "MotionProfile_DemoGUI\MotionProfile_DemoGUI.csproj", "{029271F1-F8B2-41B8-98F4-7A01453C3810}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralCalc", "GeneralCalc\GeneralCalc.csproj", "{36ABD618-C52C-4B30-83FD-E72C221A7F1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{029271F1-F8B2-41B8-98F4-7A01453C3810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{029271F1-F8B2-41B8-98F4-7A01453C3810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{029271F1-F8B2-41B8-98F4-7A01453C3810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36ABD618-C52C-4B30-83FD-E72C221A7F1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36ABD618-C52C-4B30-83FD-E72C221A7F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36ABD618-C52C-4B30-83FD-E72C221A7F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36ABD618-C52C-4B30-83FD-E72C221A7F1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
