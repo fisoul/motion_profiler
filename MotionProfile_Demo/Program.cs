@@ -6,30 +6,37 @@ using ScottPlot;
 using ScottPlot.DataSources;
 using ScottPlot.Plottables;
 
-Console.WriteLine("自动化学习助手：运动曲线生成");
+Console.WriteLine("B&R CamAutomat Profiler");
 
-var (p1, p2) = CamProfiler.CalcSymmetricShift(0.2);
+int bagLength = 300000;
+int accLength = 100000;
+int decLength = 100000;
+int syncLength = bagLength - accLength - decLength;
 
-Console.WriteLine(p1);
-Console.WriteLine(p2);
+var (pAcc1, pAcc2) = CamProfiler.CalcSymmetricShift(0.2, 3, 0);
+Console.WriteLine("Acceleration Profile:");
+Console.WriteLine(pAcc1);
+Console.WriteLine(pAcc2);
+Console.WriteLine();
+var curveAcc1 = CamProfiler.CalcPolynomial(new CamFixedPoint(0, 0, 0, 0), pAcc1);
+var curveAcc2 = CamProfiler.CalcPolynomial(pAcc1, pAcc2);
+var curveAcc3 = CamProfiler.CalcPolynomial(pAcc2, new CamFixedPoint(1, 1, 0, 0));
+CamProfile accProfile = new (1, 1, [curveAcc1, curveAcc2, curveAcc3]);
 
-Console.WriteLine(CamProfiler.CalcPolynomial(new CamFixedPoint(0,0,0,0), new CamFixedPoint(1,1,0,0)));
+var (pDec1, pDec2) = CamProfiler.CalcSymmetricShift(0.2, 3, 1);
+Console.WriteLine("Deceleration Profile:");
+Console.WriteLine(pDec1);
+Console.WriteLine(pDec2);
+Console.WriteLine();
+var curveDec1 = CamProfiler.CalcPolynomial(new CamFixedPoint(0, 0, 0, 0), pDec1);
+var curveDec2 = CamProfiler.CalcPolynomial(pDec1, pDec2);
+var curveDec3 = CamProfiler.CalcPolynomial(pDec2, new CamFixedPoint(1, 1, 0, 0));
+CamProfile decProfile = new (1, 1, [curveDec1, curveDec2, curveDec3]);
 
-var c1 = CamProfiler.CalcPolynomial(new CamFixedPoint(0, 0, 0, 0), p1);
-var c2 = CamProfiler.CalcPolynomial(p1, p2);
-var c3 = CamProfiler.CalcPolynomial(p2, new CamFixedPoint(1, 1, 0, 0));
-Console.WriteLine(c1);
-Console.WriteLine(c2);
-Console.WriteLine(c3);
+var syncProfile = CamProfile.PreDefined_FFFF();
 
-
-IFunctionSource fSource = new FunctionSource(CamPolynomial.ToFunction(c1));
-
+// visualization using ScottPlot
 Plot plot = new();
-var fPlot = plot.Add.Function(CamPolynomial.ToFunction((c1)));
-fPlot.MinX = 0;
-fPlot.MaxX = p1.X;
-plot.Axes.AutoScale();
-plot.SavePng("Cam.png", 600, 400).LaunchFile();
-plot.SavePng("Cam.png", 600, 400).LaunchInBrowser();
+
+
 

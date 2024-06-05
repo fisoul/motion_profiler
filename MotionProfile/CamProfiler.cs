@@ -33,9 +33,33 @@ public static class CamProfiler
         ret.a3 = array[3, 0];
         ret.a4 = array[4, 0];
         ret.a5 = array[5, 0];
+        ret.x_max = p2.X - p1.X;
         return ret;
     }
 
+    public static Func<double, double> GetFunction(CamPolynomial poly, int diffOrder = 0)
+    {
+        switch (diffOrder)
+        {
+            case 0:
+                return x => poly.a6 * Math.Pow(x, 6) + poly.a5 * Math.Pow(x, 5) + poly.a4 * Math.Pow(x, 4) +
+                            poly.a3 * Math.Pow(x, 3) + poly.a2 * Math.Pow(x, 2) + poly.a1 * x + poly.a0;
+            case 1:
+                return x => 6 * poly.a6 * Math.Pow(x, 5) + 5 * poly.a5 * Math.Pow(x, 4) + 4 * poly.a4 * Math.Pow(x, 3) +
+                            3 * poly.a3 * Math.Pow(x, 2) + 2 * poly.a2 * Math.Pow(x, 1) + poly.a1;
+            case 2:
+                return x => 30 * poly.a6 * Math.Pow(x, 4) + 20 * poly.a5 * Math.Pow(x, 3) + 12 * poly.a4 * Math.Pow(x, 2) +
+                            6 * poly.a3 * Math.Pow(x, 1) + 2 * poly.a2;
+            case 3:
+                return x => 120 * poly.a6 * Math.Pow(x, 3) + 60 * poly.a5 * Math.Pow(x, 2) + 24 * poly.a4 * Math.Pow(x, 1) + 6 * poly.a3;
+            case 4:
+                return x => 360 * poly.a6 * Math.Pow(x, 2) + 120 * poly.a5 * x + 24 * poly.a4;
+            default:
+                break;
+        }
+        return x => 1;
+    }
+    
     public static (CamFixedPoint, CamFixedPoint) 计算3阶对称加速曲线(double ra)
     {
         return CalcSymmetricShift(ra, 3, 0);
@@ -59,6 +83,7 @@ public static class CamProfiler
             order = 3;
         }
         var a = 2 / (1 - ra); // 2 is the only magic constant
+        if (direction != 0) a *= -1;
         switch (order)
         {
             case 3:
@@ -73,6 +98,13 @@ public static class CamProfiler
                 // p2
                 p2.Y1 = p1.Y1 + (1 - 2 * ra) * a;
                 p2.Y = (p2.X - p1.X) * (p2.Y1 + p1.Y1) / 2 + p1.Y;
+                if (direction != 0)
+                {
+                    p1.Y += 1;
+                    p2.Y += 1;
+                    p1.Y1 *= -1;
+                    p2.Y1 *= -1;
+                }
                 break;
 
             case 4:
@@ -87,6 +119,13 @@ public static class CamProfiler
                 // p2
                 p2.Y1 = (6 - 8 * ra) / (3 - 2 * ra);
                 p2.Y = (3 * ra * ra / (2 * (3 - 2 * ra))) + 1 - 2 * ra;
+                if (direction != 0)
+                {
+                    p1.Y += 1;
+                    p2.Y += 1;
+                    p1.Y1 *= -1;
+                    p2.Y1 *= -1;
+                }
                 break;
         }
         return direction == 0 ? (p1, p2) : (p2, p1);
