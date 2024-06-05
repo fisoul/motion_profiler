@@ -37,23 +37,35 @@ public static class CamProfiler
         return ret;
     }
 
-    public static Func<double, double> GetFunction(CamPolynomial poly, int diffOrder = 0)
+    public static Func<double, double> GetFunction(CamPolynomial poly, int diffOrder = 0, int xFactor = 1, int yFactor = 1)
     {
         switch (diffOrder)
         {
             case 0:
-                return x => poly.a6 * Math.Pow(x, 6) + poly.a5 * Math.Pow(x, 5) + poly.a4 * Math.Pow(x, 4) +
-                            poly.a3 * Math.Pow(x, 3) + poly.a2 * Math.Pow(x, 2) + poly.a1 * x + poly.a0;
+                return x => poly.a6 / yFactor * Math.Pow(x / xFactor, 6) + 
+                            poly.a5 / yFactor * Math.Pow(x / xFactor, 5) + 
+                            poly.a4 / yFactor * Math.Pow(x / xFactor, 4) +
+                            poly.a3 / yFactor * Math.Pow(x / xFactor, 3) + 
+                            poly.a2 / yFactor * Math.Pow(x / xFactor, 2) + 
+                            poly.a1 / yFactor * Math.Pow(x / xFactor, 1) + poly.a0;
             case 1:
-                return x => 6 * poly.a6 * Math.Pow(x, 5) + 5 * poly.a5 * Math.Pow(x, 4) + 4 * poly.a4 * Math.Pow(x, 3) +
-                            3 * poly.a3 * Math.Pow(x, 2) + 2 * poly.a2 * Math.Pow(x, 1) + poly.a1;
+                return x => 6 * poly.a6 / yFactor * Math.Pow(x / xFactor, 5) + 
+                            5 * poly.a5 / yFactor * Math.Pow(x / xFactor, 4) + 
+                            4 * poly.a4 / yFactor * Math.Pow(x / xFactor, 3) +
+                            3 * poly.a3 / yFactor * Math.Pow(x / xFactor, 2) + 
+                            2 * poly.a2 / yFactor * Math.Pow(x / xFactor, 1) + poly.a1;
             case 2:
-                return x => 30 * poly.a6 * Math.Pow(x, 4) + 20 * poly.a5 * Math.Pow(x, 3) + 12 * poly.a4 * Math.Pow(x, 2) +
-                            6 * poly.a3 * Math.Pow(x, 1) + 2 * poly.a2;
+                return x => 30 * poly.a6 / yFactor * Math.Pow(x / xFactor, 4) + 
+                            20 * poly.a5 / yFactor * Math.Pow(x / xFactor, 3) + 
+                            12 * poly.a4 / yFactor * Math.Pow(x / xFactor, 2) +
+                            6 * poly.a3 / yFactor * Math.Pow(x / xFactor, 1) + 2 * poly.a2;
             case 3:
-                return x => 120 * poly.a6 * Math.Pow(x, 3) + 60 * poly.a5 * Math.Pow(x, 2) + 24 * poly.a4 * Math.Pow(x, 1) + 6 * poly.a3;
+                return x => 120 * poly.a6 / yFactor * Math.Pow(x / xFactor, 3) + 
+                            60 * poly.a5 / yFactor * Math.Pow(x / xFactor, 2) + 
+                            24 * poly.a4 / yFactor * Math.Pow(x / xFactor, 1) + 6 * poly.a3;
             case 4:
-                return x => 360 * poly.a6 * Math.Pow(x, 2) + 120 * poly.a5 * x + 24 * poly.a4;
+                return x => 360 * poly.a6 / yFactor * Math.Pow(x / xFactor, 2) + 
+                            120 * poly.a5 / yFactor * Math.Pow(x / xFactor, 1) + 24 * poly.a4;
             default:
                 break;
         }
@@ -102,8 +114,8 @@ public static class CamProfiler
                 {
                     p1.Y += 1;
                     p2.Y += 1;
-                    p1.Y1 *= -1;
-                    p2.Y1 *= -1;
+                    p1.Y1 += 2;
+                    p2.Y1 += 2;
                 }
                 break;
 
@@ -123,11 +135,11 @@ public static class CamProfiler
                 {
                     p1.Y += 1;
                     p2.Y += 1;
-                    p1.Y1 *= -1;
-                    p2.Y1 *= -1;
+                    p1.Y1 += 2;
+                    p2.Y1 += 2;
                 }
                 break;
         }
-        return direction == 0 ? (p1, p2) : (p2, p1);
+        return (p1, p2);
     }
 }

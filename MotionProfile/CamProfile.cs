@@ -9,6 +9,8 @@ public class CamProfile
 
     public CamProfile(int masterPeriod, int slavePeriod, IEnumerable<CamPolynomial> polynomials)
     {
+        MasterPeriod = masterPeriod;
+        SlavePeriod = slavePeriod;
         PolyNomialData.AddRange(polynomials);
         PolynomialNumber = PolyNomialData.Count;
     }
