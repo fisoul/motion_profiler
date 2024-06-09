@@ -66,14 +66,20 @@ public class CamProfile
                 CamPolynomial? poly = null;
                 if (x >= Interval[i] * masterFactor + masterShift && x <= Interval[i + 1] * masterFactor + masterShift)
                 {
-                    poly ??= PolynomialData[i].Differentiate(order);
-                    return poly.Evaluate(x, masterFactor, slaveFactor, masterShift, slaveShift);
+                    poly ??= PolynomialData[i].StretchThenTranslate(masterFactor, slaveFactor, masterShift, slaveShift).Differentiate(order);
+                    return poly.Evaluate(x);
                 }
             }
             return 0;
         }
     }
 
+    public double Evaluate(double x)
+    {
+        
+        return 0;
+    }
+    
     /// <summary>
     /// Returns a straight line cam profile with a single polynomial.
     /// </summary>

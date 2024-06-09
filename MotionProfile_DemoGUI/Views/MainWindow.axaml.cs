@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 
 namespace MotionProfile_DemoGUI.Views;
 
@@ -8,10 +9,11 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        var plot = this.Find<ScottPlot.Avalonia.AvaPlot>("Plot1");
-        double[] x = [1, 2, 3, 4, 5];
-        double[] y = [2, 4, 6, 8, 10];
-        plot?.Plot.Add.Scatter(x, y);
-        plot?.Refresh();
+        
+    }
+
+    private void Button_OnClick(object? sender, RoutedEventArgs e)
+    {
+        throw new System.NotImplementedException();
     }
 }

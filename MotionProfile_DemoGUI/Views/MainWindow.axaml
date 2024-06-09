@@ -18,7 +18,7 @@
 
     <StackPanel>
         <sc:AvaPlot Height="400" Name="Plot1"></sc:AvaPlot>
-        <Button Height="50" HorizontalAlignment="Center">Refresh</Button>
+        <Button Height="50" HorizontalAlignment="Center" Command="{Binding ExampleCommand}">Refresh</Button>
         <StackPanel Orientation="Horizontal" Height="50">
             <TextBlock Text="P1" Margin="5, 3, 5, 3"></TextBlock>
             <!-- <TextBox Text="{Binding P1.X}" Margin="5,3,5,3" Width="50"/> -->

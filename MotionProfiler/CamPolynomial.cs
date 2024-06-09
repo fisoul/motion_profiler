@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 /*
- * Modify from MathNet.Numerics.Polynomial
+ * Modify from MathNet.Numerics.CamPolynomial
  */
 namespace MotionProfiler;
 
@@ -93,63 +93,70 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
                 return degree;
         return -1;
     }
-
-    public CamPolynomial Shift(double xShift, double yShift)
+    
+    // 平移和拉伸多项式沿x轴和y轴
+    public CamPolynomial StretchThenTranslate(double xStretch, double yStretch, double xShift, double yShift)
     {
-        int degree = Coefficients.Length - 1; // Highest degree
-        double[] newCoefficients = new double[Coefficients.Length];
+        return Stretch(xStretch, yStretch).Translate(xShift, yShift);
+    }
 
-        for (int i = 0; i <= degree; ++i)
+    // 先平移后拉伸多项式沿x轴和y轴
+    public CamPolynomial TranslateThenStretch(double xShift, double yShift, double xStretch, double yStretch)
+    {
+        return Translate(xShift, yShift).Stretch(xStretch, yStretch);
+    }
+
+    // 仅平移多项式沿x轴和y轴
+    public CamPolynomial Translate(double x, double y)
+    {
+        var degree = Coefficients.Length - 1;
+        var newCoefficients = new List<double>(new double[degree + 1]);
+        // 处理x轴平移
+        for (var i = 0; i <= degree; i++)
         {
-            for (int j = i; j <= degree; ++j)
+            var coefficient = Coefficients[i];
+            for (var j = 0; j <= i; j++)
             {
-                newCoefficients[j] += Coefficients[i] * Math.Pow(xShift, j - i) * Choose(j, i);
+                newCoefficients[j] += coefficient * BinomialCoefficient(i, j) * Math.Pow(-x, i - j);
             }
         }
-
-        // Vertical shift
-        newCoefficients[0] += yShift;
-
+        // 处理y轴平移
+        newCoefficients[0] += y;
         return new CamPolynomial(newCoefficients);
     }
-    
-    public CamPolynomial Scale(double xScale, double yScale)
-    {
-        //Y Axis scale
-        var newCoefficients = new double[Coefficients.Length];
-        for (int i = 0; i < newCoefficients.Length; i++)
-        {
-            newCoefficients[i] = Coefficients[i] * yScale; //simply multiply each coefficient by yScale
-        }
 
-        //X Axis scale
-        for (int i = 0; i < newCoefficients.Length; i++)
+    // 仅拉伸多项式沿x轴和y轴
+    public CamPolynomial Stretch(double x, double y)
+    {
+        var degree = Coefficients.Length - 1;
+        var newCoefficients = new List<double>(new double[degree + 1]);
+        // 处理x轴拉伸
+        for (var i = 0; i <= degree; i++)
         {
-            newCoefficients[i] *= Math.Pow(xScale, i); //divide coefficient by power of xScale 
+            var coefficient = Coefficients[i];
+            newCoefficients[i] = coefficient / Math.Pow(x, i);
         }
-        //return new polynomial with scaled coefficients
-        return new CamPolynomial(newCoefficients); 
+        // 处理y轴拉伸
+        for (var i = 0; i <= degree; i++)
+        {
+            newCoefficients[i] *= y;
+        }
+        return new CamPolynomial(newCoefficients);
     }
 
-    public CamPolynomial Transform(double xScale, double yScale, double xShift, double yShift)
+    // 计算二项式系数
+    private static double BinomialCoefficient(int n, int k)
     {
-        return Scale(xScale, yScale).Shift(xShift, yShift);
-    }
-    
-    public static long Choose(int n, int k)
-    {
-        if (k == 0) return 1;
-        if (n == 0) return 0;
-    
-        long result = 1;
-        for (int i = 1; i <= k; ++i)
+        if (k > n) return 0;
+        if (k == 0 || k == n) return 1;
+        double result = 1;
+        for (var i = 1; i <= k; i++)
         {
-            result *= n--;
+            result *= (n - (k - i));
             result /= i;
         }
         return result;
     }
-    
     
     /// <summary>
     /// Evaluate a polynomial at point x.
@@ -157,46 +164,45 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
     /// Example: coefficients [3,-1,2] represent y=2x^2-x+3.
     /// </summary>
     /// <param name="z">The location where to evaluate the polynomial at.</param>
-    /// <param name="yShift"></param>
     /// <param name="coefficients">The coefficients of the polynomial, coefficient for power k at index k.</param>
-    /// <param name="xStretch"></param>
-    /// <param name="yStretch"></param>
-    /// <param name="xShift"></param>
     /// <exception cref="T:System.ArgumentNullException">
     /// <paramref name="coefficients" /> is a null reference.
     /// </exception>
-    public static double Evaluate(double z, double xStretch = 1, double yStretch = 1, double xShift = 0, double yShift = 0,  params double[]? coefficients)
+    public static double Evaluate(double z, params double[]? coefficients)
     {
         var num1 = coefficients?.Length ?? throw new ArgumentNullException(nameof(coefficients));
         if (num1 == 0)
             return 0.0;
-        var num2 = coefficients[num1 - 1] * yStretch;
-        var transformedZ = xStretch * (z - xShift);
+        var num2 = coefficients[num1 - 1];
         for (var index = num1 - 2; index >= 0; --index)
-            num2 = num2 * transformedZ + coefficients[index] * yStretch;
-        return num2 + yShift;
+            num2 = num2 * z + coefficients[index];
+        return num2;
     }
 
     /// <summary>Evaluate a polynomial at point x.</summary>
     /// <param name="z">The location where to evaluate the polynomial at.</param>
-    /// <param name="xStretch"></param>
-    /// <param name="yStretch"></param>
-    /// <param name="xShift"></param>
-    /// <param name="yShift"></param>
-    public double Evaluate(double z, double xStretch = 1, double yStretch = 1, double xShift = 0, double yShift = 0 )
+    public double Evaluate(double z)
     {
-        return Evaluate(z, xStretch, yStretch, xShift, yShift, Coefficients);
+        return Evaluate(z, Coefficients);
     }
     
     public CamPolynomial Differentiate(int order = 1)
     {
-        if (order == 0) return Clone();
-        if (order > 1) return Differentiate().Differentiate(order - 1);
+        switch (order)
+        {
+            case 0:
+                return Clone();
+            case > 1:
+                return Differentiate().Differentiate(order - 1);
+        }
         var degree = Degree;
-        if (degree < 0)
-            return this;
-        if (degree == 0)
-            return Zero;
+        switch (degree)
+        {
+            case < 0:
+                return this;
+            case 0:
+                return Zero;
+        }
         var numArray = new double[degree];
         for (var index = 0; index < numArray.Length; ++index)
             numArray[index] = Coefficients[index + 1] * (index + 1);
