@@ -26,6 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MotionProfile\MotionProfile.csproj" />
+      <ProjectReference Include="..\MotionProfiler\MotionProfiler.csproj" />
     </ItemGroup>
 </Project>
