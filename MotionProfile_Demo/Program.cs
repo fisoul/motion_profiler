@@ -66,18 +66,18 @@ autData.State[4].Event[0].NextState = 5;
 
 // visualization using ScottPlot
 Plot plot = new();
-accProfile = accProfile.Differentiate().Stretch(masterAcc, slaveAcc);
+accProfile = accProfile.Stretch(masterAcc, slaveAcc);
 var accFuncPlot = plot.Add.Function(x => accProfile.Evaluate(x * masterSpeed));
 accFuncPlot.MinX = 0;
 accFuncPlot.MaxX = accProfile.MasterPeriod / masterSpeed;
 
-syncProfile = syncProfile.Differentiate().Stretch(masterUniform, slaveUniform);
-var syncFuncPlot = plot.Add.Function(x => syncProfile.Evaluate(x * masterSpeed - masterAcc));
+syncProfile = syncProfile.Stretch(masterUniform, slaveUniform);
+var syncFuncPlot = plot.Add.Function(x => syncProfile.Evaluate(x * masterSpeed - masterAcc) + slaveAcc);
 syncFuncPlot.MinX = accProfile.MasterPeriod / masterSpeed;
 syncFuncPlot.MaxX = (accProfile.MasterPeriod + syncProfile.MasterPeriod) / masterSpeed;
 
-decProfile = decProfile.Differentiate().Stretch(masterDec, slaveDec);
-var decFuncPlot = plot.Add.Function(x => decProfile.Evaluate(x * masterSpeed - masterAcc - masterUniform));
+decProfile = decProfile.Stretch(masterDec, slaveDec);
+var decFuncPlot = plot.Add.Function(x => decProfile.Evaluate(x * masterSpeed - masterAcc - masterUniform) + slaveAcc + slaveUniform);
 decFuncPlot.MinX = (masterAcc + masterUniform) / masterSpeed;
 decFuncPlot.MaxX = masterTotal / masterSpeed;
 
