@@ -75,9 +75,22 @@ public class CamProfile
         }
     }
 
+    public CamProfile StretchThenTranslate(int masterFactor, int slaveFactor, int masterOffset, int slaveOffset)
+    {
+        List<CamPolynomial> newPoly = [];
+        newPoly.AddRange(PolynomialData.Select(poly => poly.StretchThenTranslate(masterFactor, slaveFactor, masterOffset, slaveOffset)));
+        return new CamProfile(MasterPeriod * masterFactor, SlavePeriod * slaveFactor, newPoly);
+    }
+    
     public double Evaluate(double x)
     {
-        
+        double xMax = 0;
+        foreach (var poly in PolynomialData)
+        {
+            xMax += poly.XMax;
+            if (x <= xMax)
+                return poly.Evaluate(x);
+        }
         return 0;
     }
     

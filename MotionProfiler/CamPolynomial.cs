@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 /*
- * Modify from MathNet.Numerics.CamPolynomial
+ * Modified from MathNet.Numerics.Polynomial
  */
 namespace MotionProfiler;
 
@@ -104,6 +104,7 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
     public CamPolynomial TranslateThenStretch(double xShift, double yShift, double xStretch, double yStretch)
     {
         return Translate(xShift, yShift).Stretch(xStretch, yStretch);
+
     }
 
     // 仅平移多项式沿x轴和y轴
@@ -122,7 +123,11 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
         }
         // 处理y轴平移
         newCoefficients[0] += y;
-        return new CamPolynomial(newCoefficients);
+        var ret = new CamPolynomial(newCoefficients)
+        {
+            XMax = XMax //ret. = this.
+        };
+        return ret;
     }
 
     // 仅拉伸多项式沿x轴和y轴
@@ -141,7 +146,11 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
         {
             newCoefficients[i] *= y;
         }
-        return new CamPolynomial(newCoefficients);
+        var ret = new CamPolynomial(newCoefficients)
+        {
+            XMax = XMax * x
+        };
+        return ret;
     }
 
     // 计算二项式系数
