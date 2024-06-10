@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using MathNet.Numerics;
 
 namespace MotionProfiler;
@@ -96,5 +97,27 @@ public class CamProfile
             XMax = 1
         };
         return new CamProfile(1, 1, new []{poly});
+    }
+
+    public static CamProfile SymmetricSpeedShift(double ra, int order = 3, int direction = 0)
+    {
+        var (p1, p2) = ProfileGen.CalcSymmetricShift(ra, order, direction);
+        CamFixedPoint p0, p3;
+        if (direction == 0)
+        {
+            p0 = new CamFixedPoint(0, 0, 0, 0);
+            p3 = new CamFixedPoint(1, 1, 2, 0);
+        }
+        else
+        {
+            p0 = new CamFixedPoint(0, 0, 2, 0);
+            p3 = new CamFixedPoint(1, 1, 0, 0);
+        }
+
+        var poly1 = ProfileGen.CalcCamPolynomial(p0, p1);
+        var poly2 = ProfileGen.CalcCamPolynomial(p1, p2);
+        var poly3 = ProfileGen.CalcCamPolynomial(p2, p3);
+
+        return new CamProfile(1, 1, new CamPolynomial[] { poly1, poly2, poly3 });
     }
 }
