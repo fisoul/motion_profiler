@@ -57,6 +57,11 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
         Coefficients = coefficient == 0.0 ? [] : new double[1] { coefficient };
     }
 
+    public CamPolynomial(double xMax, params double[] coefficients) : this(coefficients)
+    {
+        XMax = xMax;
+    }
+    
     /// <summary>
     /// Create a polynomial with the provided coefficients (in ascending order, where the index matches the exponent).
     /// Example: {5, 0, 2} -&gt; "p : x -&gt; 5 + 0 x^1 + 2 x^2".
@@ -215,7 +220,7 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
         var numArray = new double[degree];
         for (var index = 0; index < numArray.Length; ++index)
             numArray[index] = Coefficients[index + 1] * (index + 1);
-        return new CamPolynomial(numArray);
+        return new CamPolynomial(XMax, numArray);
     }
 
     public CamPolynomial Integrate(int order = 1)

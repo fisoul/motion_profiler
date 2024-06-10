@@ -5,10 +5,11 @@ using ScottPlot;
 
 Console.WriteLine("B&R CamAutomat Profiler");
 //Demo Application Parameters, Acc - Uniform - Dec Portion Calc
-const int masterTotal = 300000;
+const int masterTotal = 18000;
+const double masterSpeed = 18000;
 const int slaveTotal = 300000;
-const int slaveAcc = 80000;
-const int slaveDec = 80000;
+const int slaveAcc = 100000;
+const int slaveDec = 100000;
 const int slaveUniform = slaveTotal - slaveAcc - slaveDec;
 const int masterAcc = (int)((double)slaveAcc * 2 / (slaveTotal + slaveAcc + slaveDec) * masterTotal);
 const int masterDec = (int)((double)slaveDec * 2 / (slaveTotal + slaveAcc + slaveDec) * masterTotal);
@@ -65,22 +66,22 @@ autData.State[4].Event[0].NextState = 5;
 
 // visualization using ScottPlot
 Plot plot = new();
-accProfile = accProfile.Stretch(masterAcc, slaveAcc);
-var accFuncPlot = plot.Add.Function(accProfile.Evaluate);
+accProfile = accProfile.Differentiate().Stretch(masterAcc, slaveAcc);
+var accFuncPlot = plot.Add.Function(x => accProfile.Evaluate(x * masterSpeed));
 accFuncPlot.MinX = 0;
-accFuncPlot.MaxX = accProfile.MasterPeriod;
+accFuncPlot.MaxX = accProfile.MasterPeriod / masterSpeed;
 
-syncProfile = syncProfile.Stretch(masterUniform, slaveUniform);
-var syncFuncPlot = plot.Add.Function(x => syncProfile.Evaluate(x - masterAcc) + slaveAcc);
-syncFuncPlot.MinX = accFuncPlot.MaxX;
-syncFuncPlot.MaxX = syncFuncPlot.MinX + masterUniform;
+syncProfile = syncProfile.Differentiate().Stretch(masterUniform, slaveUniform);
+var syncFuncPlot = plot.Add.Function(x => syncProfile.Evaluate(x * masterSpeed - masterAcc));
+syncFuncPlot.MinX = accProfile.MasterPeriod / masterSpeed;
+syncFuncPlot.MaxX = (accProfile.MasterPeriod + syncProfile.MasterPeriod) / masterSpeed;
 
-decProfile = decProfile.Stretch(masterDec, slaveDec);
-var decFuncPlot = plot.Add.Function(x => decProfile.Evaluate(x - syncFuncPlot.MaxX) + slaveAcc + slaveUniform);
-decFuncPlot.MinX = masterAcc + masterUniform;
-decFuncPlot.MaxX = masterTotal;
+decProfile = decProfile.Differentiate().Stretch(masterDec, slaveDec);
+var decFuncPlot = plot.Add.Function(x => decProfile.Evaluate(x * masterSpeed - masterAcc - masterUniform));
+decFuncPlot.MinX = (masterAcc + masterUniform) / masterSpeed;
+decFuncPlot.MaxX = masterTotal / masterSpeed;
 
 
-plot.Axes.SetLimits(0, masterTotal, 0, slaveTotal);
+plot.Axes.SetLimits(0, masterTotal / masterSpeed, 0, slaveTotal);
 plot.SaveWebp("CamProfile.webp", 800, 600, 100).LaunchInBrowser();
 // plot.SavePng("CamProfile.png", 800, 600).LaunchFile();

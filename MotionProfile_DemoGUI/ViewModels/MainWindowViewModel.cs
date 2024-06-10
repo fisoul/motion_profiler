@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Reactive;
 using System.Runtime.CompilerServices;
 using MotionProfiler;
 using ReactiveUI;
-using ScottPlot.Avalonia;
 
 namespace MotionProfile_DemoGUI.ViewModels;
 
-public class MainWindowViewModel : INotifyPropertyChanged
+public sealed class MainWindowViewModel : INotifyPropertyChanged
 {
     public static string Greeting => "Cam Profile";
-
+    
     private int masterTotal;
     public int MasterTotal 
     { 
         get => masterTotal;
         set { if (SetField(ref masterTotal, value)) UpdateAutomat(); }
+    }
+
+    private double masterSpeed;
+
+    public double MasterSpeed
+    {
+        get => masterSpeed;
+        set
+        {
+            if (SetField(ref masterSpeed, value)) UpdateAutomat();
+        }
     }
 
     private int slaveTotal;
@@ -27,53 +36,48 @@ public class MainWindowViewModel : INotifyPropertyChanged
         get => slaveTotal;
         set { if (SetField(ref slaveTotal, value)) UpdateAutomat(); }
     }
+
+    private readonly int[] slaveFactor = new int[3];
+    private readonly int[] masterFactor = new int[3];
     
-    private int slaveAcc;
+    public CamProfile[] Profile { get; } = new CamProfile[3];
+    public CamProfile[] ProfileScaled { get; } = new CamProfile[3];
+    
     public int SlaveAcc
     {
-        get => slaveAcc;
-        set { if (SetField(ref slaveAcc, value)) UpdateAutomat(); }
+        get => slaveFactor[0];
+        set { if (SetField(ref slaveFactor[0], value)) UpdateAutomat(); }
     }
 
-    private int slaveDec;
-    public int SlaveDec
-    {
-        get => slaveDec;
-        set { if (SetField(ref slaveDec, value)) UpdateAutomat(); }
-    }
-
-    private int slaveUni;
     public int SlaveUni
     {
-        get => slaveUni;
-        set { if (SetField(ref slaveUni, value)) UpdateAutomat(); }
+        get => slaveFactor[1];
+        set { if (SetField(ref slaveFactor[1], value)) UpdateAutomat(); }
+    }
+    
+    public int SlaveDec
+    {
+        get => slaveFactor[2];
+        set { if (SetField(ref slaveFactor[2], value)) UpdateAutomat(); }
     }
 
-    private int masterAcc;
     public int MasterAcc
     {
-        get => masterAcc;
-        set { if (SetField(ref masterAcc, value)) UpdateAutomat(); }
+        get => masterFactor[0];
+        set { if (SetField(ref masterFactor[0], value)) UpdateAutomat(); }
     }
 
-    private int masterDec;
-    public int MasterDec
-    {
-        get => masterDec;
-        set { if (SetField(ref masterDec, value)) UpdateAutomat(); }
-    }
-
-    private int masterUni;
     public int MasterUni
     {
-        get => masterUni;
-        set { if (SetField(ref masterUni, value)) UpdateAutomat(); }
+        get => masterFactor[1];
+        set { if (SetField(ref masterFactor[1], value)) UpdateAutomat(); }
     }
-
-    private CamPolynomial[] PolynomialsAcc = [];
-    public CamProfile ProfileAcc { get; private set; }
-    public CamProfile ProfileUni { get; private set; } = CamProfile.StraightLine();
-    public CamProfile ProfileDec { get; private set; }
+    
+    public int MasterDec
+    {
+        get => masterFactor[2];
+        set { if (SetField(ref masterFactor[2], value)) UpdateAutomat(); }
+    }
 
     private double raAcc;
     public double RaAcc
@@ -81,7 +85,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         get => raAcc;
         set
         {
-            if (SetField(ref raAcc, value)) ProfileAcc = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
+            if (SetField(ref raAcc, value)) Profile[0] = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
         }
     }
     public int OrderAcc;
@@ -92,12 +96,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
         get => raDec;
         set
         {
-            if (SetField(ref raDec, value)) ProfileDec = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
+            if (SetField(ref raDec, value)) Profile[2] = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
         }
     }
     public int OrderDec;
     public bool CalcValid { get; set; }
-
     
     private void UpdateAutomat()
     {
@@ -106,13 +109,15 @@ public class MainWindowViewModel : INotifyPropertyChanged
             CalcValid = false;
             return;
         }
-
-        SlaveUni = SlaveTotal - SlaveDec;
+        SlaveUni = SlaveTotal - SlaveDec - SlaveAcc;
         MasterAcc = (int)((double)SlaveAcc * 2 / (SlaveTotal + SlaveAcc + SlaveDec) * MasterTotal);
         MasterDec = (int)((double)SlaveDec * 2 / (SlaveTotal + SlaveAcc + SlaveDec) * MasterTotal);
         MasterUni = MasterTotal - MasterAcc - MasterDec;
         CalcValid = true;
-
+        for (var i = 0; i < Profile.Length; i++)
+        {
+            ProfileScaled[i] = Profile[i].Stretch(masterFactor[i], slaveFactor[i]);
+        }
         ProfileChanged?.Invoke(this, EventArgs.Empty);
     }
     
@@ -120,10 +125,25 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         ExampleCommand = ReactiveCommand.Create(PerformAction);
 
+        masterTotal = 18000;
+        masterSpeed = masterTotal;
+        slaveTotal = 300000;
+        slaveFactor[0] = 100000;
+        slaveFactor[1] = 100000;
+        slaveFactor[2] = 100000;
+        masterFactor[0] = 7200;
+        masterFactor[1] = 3600;
+        masterFactor[2] = 7200;
+        
         RaAcc = RaDec = 0.2;
         OrderAcc = OrderDec = 3;
-        ProfileAcc = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
-        ProfileDec = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
+        Profile[0] = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
+        Profile[1] = CamProfile.StraightLine();
+        Profile[2] = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
+
+        ProfileScaled[0] = Profile[0]; // ref
+        ProfileScaled[1] = Profile[1];
+        ProfileScaled[2] = Profile[2];
     }
 
     public event EventHandler? ProfileChanged;
@@ -138,12 +158,12 @@ public class MainWindowViewModel : INotifyPropertyChanged
     // INotifyPropertyChanged
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;

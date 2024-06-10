@@ -36,11 +36,15 @@
                 <ToggleButton Height="60" Width="70"></ToggleButton>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="40" Margin="10, 20, 10, 10">
-                <TextBlock Text="主轴总长" Foreground="Black" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
+                <TextBlock Text="主轴周期" Foreground="Black" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <TextBox Text="{Binding MasterTotal}" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
-                <TextBlock Text="从轴总长" Foreground="Black" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
+                <TextBlock Text="主轴速度" Foreground="Black" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
+                <TextBox Text="{Binding MasterSpeed}" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
+                <TextBlock Text="从轴周期" Foreground="Black" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <TextBox Text="{Binding SlaveTotal}" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
@@ -55,18 +59,18 @@
                 <TextBlock Text="从轴匀速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <TextBox Text="{Binding SlaveUni}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
-                <TextBlock Text="主轴加速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
-                <TextBox Text="{Binding MasterAcc}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
-                <TextBlock Text="主轴减速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
-                <TextBox Text="{Binding MasterDec}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
-                <TextBlock Text="主轴匀速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
-                <TextBox Text="{Binding MasterUni}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            </StackPanel>
+            <!-- <StackPanel Orientation="Horizontal" Height="40" Margin="10"> -->
+            <!--     <TextBlock Text="主轴加速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/> -->
+            <!--     <TextBox Text="{Binding MasterAcc}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/> -->
+            <!-- </StackPanel> -->
+            <!-- <StackPanel Orientation="Horizontal" Height="40" Margin="10"> -->
+            <!--     <TextBlock Text="主轴减速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/> -->
+            <!--     <TextBox Text="{Binding MasterDec}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/> -->
+            <!-- </StackPanel> -->
+            <!-- <StackPanel Orientation="Horizontal" Height="40" Margin="10"> -->
+            <!--     <TextBlock Text="主轴匀速" Foreground="Orange" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/> -->
+            <!--     <TextBox Text="{Binding MasterUni}" IsReadOnly="True" Width="120" Margin="10, 0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/> -->
+            <!-- </StackPanel> -->
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <TextBlock Text="加速段Ra" Foreground="Violet" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <Slider Width="120" HorizontalAlignment="Center" Margin="0, -8, 0, 0"></Slider>
@@ -74,6 +78,9 @@
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <TextBlock Text="减速段Ra" Foreground="Violet" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <Slider Width="120" HorizontalAlignment="Center" Margin="0, -8, 0, 0"></Slider>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
+                <Button Click="Button_OnClick" Height="40" Width="40"></Button>
             </StackPanel>
         </StackPanel>
     </Grid>
