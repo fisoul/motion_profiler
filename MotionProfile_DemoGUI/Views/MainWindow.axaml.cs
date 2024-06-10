@@ -26,6 +26,5 @@ public partial class MainWindow : Window
     private void ViewModel_ProfileChanged(object? sender, EventArgs e)
     {
         PlotPosition.Plot.Clear();
-        PlotPosition.Plot.Add.Function();
     }
 }

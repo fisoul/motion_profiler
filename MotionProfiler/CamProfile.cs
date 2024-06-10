@@ -1,8 +1,9 @@
-using System.Security.Cryptography;
-using MathNet.Numerics;
-
 namespace MotionProfiler;
 
+/// <summary>
+/// Represents a cam profile for motion control.
+/// Consists of continuous Cam Polynomials
+/// </summary>
 public class CamProfile
 {
     public int MasterPeriod { get; set; }
@@ -12,11 +13,10 @@ public class CamProfile
 
     // B&R ACP10 Limited to 128 (64, prior to V5.030)
     public List<CamPolynomial> PolynomialData { get; set; } = [];
-    public List<double> Interval { get; set; } = [];
     public CamFixedPoint[]? RefPoints { get; set; }
 
     /// <summary>
-    /// Represents a cam profile for motion control.
+    /// Construct from given points
     /// </summary>
     public CamProfile(IEnumerable<CamFixedPoint> points)
     {
@@ -27,61 +27,39 @@ public class CamProfile
             PolynomialData.Add(ProfileGen.CalcCamPolynomial(RefPoints[i], RefPoints[i + 1]));
         }
         // warning here, last [] x,y must be integer
+        // MasterPeriod is Integer, MasterFactor is Integer, so new MasterPeriod is always Integer
         MasterPeriod = (int)RefPoints[-1].X;
         SlavePeriod = (int)RefPoints[-1].Y;
     }
-
+    
     /// <summary>
-    /// Represents a cam profile for motion control.
+    /// Construct from calculated polynomials
     /// </summary>
     public CamProfile(int masterPeriod, int slavePeriod, IEnumerable<CamPolynomial> polynomials)
     {
         MasterPeriod = masterPeriod;
         SlavePeriod = slavePeriod;
         PolynomialData.AddRange(polynomials);
-        Interval.Add(0);
-        double interval = 0;
-        foreach (var poly in PolynomialData)
-        {
-            interval += poly.XMax;
-            Interval.Add(interval);
-        }
     }
 
     /// <summary>
-    /// Returns a function that calculates the value of a motion profile at a given position.
+    /// Stretch the Profile and returns a new Profile
     /// </summary>
-    /// <param name="masterFactor">The multiplication factor for the master period.</param>
-    /// <param name="slaveFactor">The multiplication factor for the slave period.</param>
-    /// <param name="order">differential order</param>
-    /// <param name="masterShift"></param>
-    /// <param name="slaveShift"></param>
-    /// <returns>A function that calculates the value of a motion profile at a given position.</returns>
-    public Func<double, double> GetFunction(int masterFactor = 1, int slaveFactor = 1, int order = 0, int masterShift = 0, int slaveShift = 0)
-    {
-        return Ret;
-        double Ret(double x)
-        {
-            for (var i = 0; i < PolynomialNumber; i++)
-            {
-                CamPolynomial? poly = null;
-                if (x >= Interval[i] * masterFactor + masterShift && x <= Interval[i + 1] * masterFactor + masterShift)
-                {
-                    poly ??= PolynomialData[i].StretchThenTranslate(masterFactor, slaveFactor, masterShift, slaveShift).Differentiate(order);
-                    return poly.Evaluate(x);
-                }
-            }
-            return 0;
-        }
-    }
-
-    public CamProfile StretchThenTranslate(int masterFactor, int slaveFactor, int masterOffset, int slaveOffset)
+    /// <param name="masterFactor">stretch of x</param>
+    /// <param name="slaveFactor">stretch of y</param>
+    /// <returns></returns>
+    public CamProfile Stretch(int masterFactor, int slaveFactor)
     {
         List<CamPolynomial> newPoly = [];
-        newPoly.AddRange(PolynomialData.Select(poly => poly.StretchThenTranslate(masterFactor, slaveFactor, masterOffset, slaveOffset)));
+        newPoly.AddRange(PolynomialData.Select(poly => poly.Stretch(masterFactor, slaveFactor)));
         return new CamProfile(MasterPeriod * masterFactor, SlavePeriod * slaveFactor, newPoly);
     }
     
+    /// <summary>
+    /// Evaluates the profile value at given x
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
     public double Evaluate(double x)
     {
         double xMax = 0;
@@ -92,6 +70,18 @@ public class CamProfile
                 return poly.Evaluate(x);
         }
         return 0;
+    }
+
+    /// <summary>
+    /// Calculates the derivative of the CamProfile by differentiating each CamPolynomial in the profile.
+    /// </summary>
+    /// <param name="order">The order of the derivative to calculate. Default is 1.</param>
+    /// <returns>A new CamProfile object that is the derivative of the current profile.</returns>
+    public CamProfile Differentiate(int order = 1)
+    {
+        List<CamPolynomial> newPoly = [];
+        newPoly.AddRange(PolynomialData.Select(poly => poly.Differentiate(order)));
+        return new CamProfile(MasterPeriod, SlavePeriod, newPoly);
     }
     
     /// <summary>
@@ -112,25 +102,30 @@ public class CamProfile
         return new CamProfile(1, 1, new []{poly});
     }
 
+    /// <summary>
+    /// Generates a symmetric speed shift CamProfile.
+    /// </summary>
+    /// <param name="ra">The ratio between the amplitude of the speed shift and the period (default is 0.5).</param>
+    /// <param name="order">The order of the CamPolynomial (default is 3).</param>
+    /// <param name="direction">The direction of the speed shift (0 for acceleration, 1 for deceleration) (default is 0).</param>
+    /// <returns>The generated CamProfile object representing the symmetric speed shift.</returns>
     public static CamProfile SymmetricSpeedShift(double ra, int order = 3, int direction = 0)
     {
         var (p1, p2) = ProfileGen.CalcSymmetricShift(ra, order, direction);
         CamFixedPoint p0, p3;
         if (direction == 0)
         {
-            p0 = new CamFixedPoint(0, 0, 0, 0);
-            p3 = new CamFixedPoint(1, 1, 2, 0);
+            p0 = new CamFixedPoint(0);
+            p3 = new CamFixedPoint(1, 1, 2);
         }
         else
         {
-            p0 = new CamFixedPoint(0, 0, 2, 0);
-            p3 = new CamFixedPoint(1, 1, 0, 0);
+            p0 = new CamFixedPoint(0, 0, 2);
+            p3 = new CamFixedPoint(1, 1);
         }
-
         var poly1 = ProfileGen.CalcCamPolynomial(p0, p1);
         var poly2 = ProfileGen.CalcCamPolynomial(p1, p2);
         var poly3 = ProfileGen.CalcCamPolynomial(p2, p3);
-
-        return new CamProfile(1, 1, new CamPolynomial[] { poly1, poly2, poly3 });
+        return new CamProfile(1, 1, new[] { poly1, poly2, poly3 });
     }
 }
