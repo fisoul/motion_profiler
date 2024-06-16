@@ -41,7 +41,7 @@ var curveDec2 = ProfileGen.CalcCamPolynomial(pDec1, pDec2);
 var curveDec3 = ProfileGen.CalcCamPolynomial(pDec2, new CamFixedPoint(1, 1, 0, 0));
 CamProfile decProfile = new(1, 1, [curveDec1, curveDec2, curveDec3]);
 
-// Apply B&R Automat - not implemented
+// Apply B&R Automat
 AutData autData = new();
 autData.State[2].MasterFactor = masterAcc;
 autData.State[2].SlaveFactor = slaveAcc;
@@ -64,7 +64,7 @@ autData.State[4].Event[0].Type = AutEventTyp.ncST_END;
 autData.State[4].Event[0].Attribute = AutEventAttr.ncST_END;
 autData.State[4].Event[0].NextState = 5;
 
-// visualization using ScottPlot
+// visualization using Plot Control
 Plot plot = new();
 accProfile = accProfile.Stretch(masterAcc, slaveAcc);
 var accFuncPlot = plot.Add.Function(x => accProfile.Evaluate(x * masterSpeed));

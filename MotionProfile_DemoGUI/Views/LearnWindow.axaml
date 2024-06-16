@@ -1,0 +1,25 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MotionProfile_DemoGUI.Views.LearnWindow"
+        Title="LearnWindow">
+    <StackPanel Orientation="Vertical">
+        <!-- Top Bar -->
+        <StackPanel Orientation="Horizontal" Height="60" Spacing="10">
+            <TextBlock Text="My Application" Margin="30,20,0,0"></TextBlock>
+        </StackPanel>
+        <!-- Main Area -->
+        <StackPanel Orientation="Horizontal">
+            <!-- Side Navigation -->
+            <StackPanel Width="80">
+                <Button Width="80" Height="60"></Button>
+            </StackPanel>
+            <ContentControl>
+                
+            </ContentControl>
+        </StackPanel>
+    </StackPanel>
+    
+</Window>

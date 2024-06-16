@@ -42,17 +42,31 @@ public class CamProfile
         PolynomialData.AddRange(polynomials);
     }
 
+    public override string ToString()
+    {
+        var ret = string.Empty;
+        double interval = 0;
+        foreach (var poly in PolynomialData)
+        {
+            ret += poly;
+            ret += $" [{interval:N2} - {interval + poly.XMax:N2}]";
+            ret += Environment.NewLine;
+            interval += poly.XMax;
+        }
+        return ret;
+    }
+    
     /// <summary>
     /// Stretch the Profile and returns a new Profile
     /// </summary>
-    /// <param name="masterFactor">stretch of x</param>
-    /// <param name="slaveFactor">stretch of y</param>
+    /// <param name="xStretch">stretch of x</param>
+    /// <param name="yStretch">stretch of y</param>
     /// <returns></returns>
-    public CamProfile Stretch(int masterFactor, int slaveFactor)
+    public CamProfile Stretch(int xStretch, int yStretch)
     {
         List<CamPolynomial> newPoly = [];
-        newPoly.AddRange(PolynomialData.Select(poly => poly.Stretch(masterFactor, slaveFactor)));
-        return new CamProfile(MasterPeriod * masterFactor, SlavePeriod * slaveFactor, newPoly);
+        newPoly.AddRange(PolynomialData.Select(poly => poly.Stretch(xStretch, yStretch)));
+        return new CamProfile(MasterPeriod * xStretch, SlavePeriod * yStretch, newPoly);
     }
     
     /// <summary>

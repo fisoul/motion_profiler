@@ -79,9 +79,6 @@
                 <TextBlock Text="减速段Ra" Foreground="Violet" FontSize="18" FontFamily="新宋体" HorizontalAlignment="Left" VerticalAlignment ="Center" Width="100"/>
                 <Slider Width="120" HorizontalAlignment="Center" Margin="0, -8, 0, 0"></Slider>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
-                <Button Click="Button_OnClick" Height="40" Width="40"></Button>
-            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

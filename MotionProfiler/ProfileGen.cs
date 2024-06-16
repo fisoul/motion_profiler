@@ -5,12 +5,12 @@ namespace MotionProfiler;
 public static class ProfileGen
 {
     /// <summary>
-    /// Calculates the polynomial curve that fits the given fixed points.
+    /// Calculates a CamPolynomial based on two CamFixedPoint objects and an order value.
     /// </summary>
-    /// <param name="p1">The first fixed point.</param>
-    /// <param name="p2">The second fixed point.</param>
-    /// <param name="order">The order of the Polynomial to be calculated. 3 and 5 are supported</param>
-    /// <returns>The calculated polynomial curve.</returns>
+    /// <param name="p1">The first CamFixedPoint object.</param>
+    /// <param name="p2">The second CamFixedPoint object.</param>
+    /// <param name="order">The order of the polynomial. Can be 3 or 5. Default value is 5.</param>
+    /// <returns>A CamPolynomial object representing the calculated polynomial.</returns>
     public static CamPolynomial CalcCamPolynomial(CamFixedPoint p1, CamFixedPoint p2, int order = 5)
     {
         var ret = new CamPolynomial(6);

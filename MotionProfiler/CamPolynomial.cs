@@ -135,7 +135,13 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
         return ret;
     }
 
-    // 仅拉伸多项式沿x轴和y轴
+    /// <summary>
+    /// 仅拉伸多项式沿x轴和y轴
+    /// Stretch the polynomial along the x-axis and y-axis.
+    /// </summary>
+    /// <param name="x">Stretch factor along the x-axis</param>
+    /// <param name="y">Stretch factor along the y-axis</param>
+    /// <returns>The stretched polynomial</returns>
     public CamPolynomial Stretch(double x, double y)
     {
         var degree = Coefficients.Length - 1;
@@ -199,7 +205,12 @@ public class CamPolynomial : IFormattable, IEquatable<CamPolynomial>, ICloneable
     {
         return Evaluate(z, Coefficients);
     }
-    
+
+    /// <summary>
+    /// Differentiates the CamPolynomial object by the specified order.
+    /// </summary>
+    /// <param name="order">The order of differentiation. Default value is 1.</param>
+    /// <returns>A new CamPolynomial object representing the differentiated polynomial.</returns>
     public CamPolynomial Differentiate(int order = 1)
     {
         switch (order)

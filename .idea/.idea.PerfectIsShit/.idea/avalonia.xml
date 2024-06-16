@@ -3,6 +3,8 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="MotionProfile_DemoGUI/App.axaml" value="MotionProfile_DemoGUI/MotionProfile_DemoGUI.csproj" />
+        <entry key="MotionProfile_DemoGUI/Views/LearnWindow.axaml" value="MotionProfile_DemoGUI/MotionProfile_DemoGUI.csproj" />
         <entry key="MotionProfile_DemoGUI/Views/MainWindow.axaml" value="MotionProfile_DemoGUI/MotionProfile_DemoGUI.csproj" />
       </map>
     </option>
