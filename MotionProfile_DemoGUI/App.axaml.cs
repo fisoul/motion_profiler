@@ -22,6 +22,7 @@ public partial class App : Application
             viewModel.ProfileChanged += mainWindow.ViewModel_ProfileChanged;
             desktop.MainWindow = mainWindow;
             mainWindow.DataContext = viewModel;
+            viewModel.UpdateAutomat();
         }
         base.OnFrameworkInitializationCompleted();
     }

@@ -42,7 +42,18 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
     
     public CamProfile[] Profile { get; } = new CamProfile[3];
     public CamProfile[] ProfileScaled { get; } = new CamProfile[3];
-    
+
+
+    private double _slaveAccPercent = 0.3;
+    public double SlaveAccPercent
+    {
+        get => _slaveAccPercent;
+        set
+        {
+            _slaveAccPercent = value;
+            SlaveAcc = (int)(SlaveTotal * _slaveAccPercent);
+        }
+    }
     public int SlaveAcc
     {
         get => slaveFactor[0];
@@ -55,6 +66,16 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         set { if (SetField(ref slaveFactor[1], value)) UpdateAutomat(); }
     }
     
+    private double _slaveDecPercent = 0.3;
+    public double SlaveDecPercent
+    {
+        get => _slaveDecPercent;
+        set
+        {
+            _slaveDecPercent = value;
+            SlaveDec = (int)(SlaveTotal * _slaveDecPercent);
+        }
+    }
     public int SlaveDec
     {
         get => slaveFactor[2];
@@ -85,10 +106,26 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         get => raAcc;
         set
         {
-            if (SetField(ref raAcc, value)) Profile[0] = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
+            if (SetField(ref raAcc, value))
+            {
+                Profile[0] = CamProfile.SymmetricSpeedShift(raAcc, OrderAcc, 0);
+                UpdateAutomat();
+            }
         }
     }
-    public int OrderAcc;
+    private int orderAcc;
+    public int OrderAcc
+    {
+        get => orderAcc;
+        set
+        {
+            if (SetField(ref orderAcc, value))
+            {
+                Profile[0] = CamProfile.SymmetricSpeedShift(raAcc, OrderAcc, 0);
+                UpdateAutomat();
+            }
+        }
+    }
 
     private double raDec;
     public double RaDec
@@ -96,15 +133,34 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         get => raDec;
         set
         {
-            if (SetField(ref raDec, value)) Profile[2] = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
+            if (SetField(ref raDec, value))
+            {
+                Profile[2] = CamProfile.SymmetricSpeedShift(raDec, OrderDec, 1);
+                UpdateAutomat();
+            }
         }
     }
-    public int OrderDec;
-    public bool CalcValid { get; set; }
-    
-    private void UpdateAutomat()
+
+    private int orderDec;
+    public int OrderDec
     {
-        if (SlaveAcc + SlaveDec >= SlaveTotal)
+        get => orderDec;
+        set
+        {
+            if (SetField(ref orderDec, value))
+            {
+                Profile[2] = CamProfile.SymmetricSpeedShift(raDec, OrderDec, 1);
+                UpdateAutomat();
+            }
+        }
+    }
+    public bool CalcValid { get; set; }
+
+    public void UpdateAutomat(bool force = false)
+    {
+        SlaveAcc = (int)(slaveTotal * _slaveAccPercent);
+        SlaveDec = (int)(slaveTotal * _slaveDecPercent);
+        if (SlaveAcc + SlaveDec > SlaveTotal)
         {
             CalcValid = false;
             return;
@@ -135,8 +191,8 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         masterFactor[1] = 3600;
         masterFactor[2] = 7200;
         
-        RaAcc = RaDec = 0.2;
-        OrderAcc = OrderDec = 3;
+        raAcc = raDec = 0.2;
+        orderAcc = orderDec = 3;
         Profile[0] = CamProfile.SymmetricSpeedShift(RaAcc, OrderAcc, 0);
         Profile[1] = CamProfile.StraightLine();
         Profile[2] = CamProfile.SymmetricSpeedShift(RaDec, OrderDec, 1);
@@ -144,6 +200,7 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
         ProfileScaled[0] = Profile[0]; // ref
         ProfileScaled[1] = Profile[1];
         ProfileScaled[2] = Profile[2];
+        UpdateAutomat(true);
     }
 
     public event EventHandler? ProfileChanged;

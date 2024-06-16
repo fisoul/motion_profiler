@@ -2,6 +2,8 @@ using System;
 using Avalonia.Controls;
 using MotionProfiler;
 using MotionProfile_DemoGUI.ViewModels;
+using ScottPlot;
+using ScottPlot.TickGenerators;
 
 namespace MotionProfile_DemoGUI.Views;
 
@@ -18,6 +20,16 @@ public partial class MainWindow : Window
         PlotVelocity.Plot.Title("Velocity", 16);   
         PlotAcceleration.Plot.Title("Acceleration", 16);
         PlotJerk.Plot.Title("Jerk", 16);
+        Plot[] plots = [PlotPosition.Plot, PlotVelocity.Plot, PlotAcceleration.Plot, PlotJerk.Plot];
+        foreach (var plot in plots)
+        {
+            plot.RenderManager.AxisLimitsChanged += AxisLimitsChanged;
+        }
+    }
+
+    private void AxisLimitsChanged(object? sender, RenderDetails e)
+    {
+        
     }
 
     public void ViewModel_ProfileChanged(object? sender, EventArgs e)
@@ -33,7 +45,7 @@ public partial class MainWindow : Window
         var interval = new double[4];
         interval[0] = 0;
         interval[1] = viewModel.MasterAcc / viewModel.MasterSpeed;
-        interval[2] = (viewModel.MasterAcc + viewModel.MasterUni) / viewModel.MasterSpeed;;
+        interval[2] = (viewModel.MasterAcc + viewModel.MasterUni) / viewModel.MasterSpeed;
         interval[3] = viewModel.MasterTotal / viewModel.MasterSpeed;
         
         // Position
@@ -50,6 +62,9 @@ public partial class MainWindow : Window
         funcPlot1.MaxX = funcPlot2.MinX = interval[1];
         funcPlot2.MaxX = funcPlot3.MinX = interval[2];
         funcPlot3.MaxX = interval[3];
+        funcPlot1.LineWidth = 2;
+        funcPlot2.LineWidth = 2;
+        funcPlot3.LineWidth = 2;
         plot.Axes.SetLimits(0, interval[3], viewModel.SlaveTotal * -YRange, viewModel.SlaveTotal * (1+YRange));
         PlotPosition.Refresh();
 
@@ -65,6 +80,9 @@ public partial class MainWindow : Window
         funcPlot1.MaxX = funcPlot2.MinX = interval[1];
         funcPlot2.MaxX = funcPlot3.MinX = interval[2];
         funcPlot3.MaxX = interval[3];
+        funcPlot1.LineWidth = 2;
+        funcPlot2.LineWidth = 2;
+        funcPlot3.LineWidth = 2;
         plot.Axes.SetLimits(0, interval[3], uniProfile.EvaluateVelocity(0) * -YRange, uniProfile.EvaluateVelocity(0) * (1+YRange));
         PlotVelocity.Refresh();
         
@@ -80,6 +98,9 @@ public partial class MainWindow : Window
         funcPlot1.MaxX = funcPlot2.MinX = interval[1];
         funcPlot2.MaxX = funcPlot3.MinX = interval[2];
         funcPlot3.MaxX = interval[3];
+        funcPlot1.LineWidth = 2;
+        funcPlot2.LineWidth = 2;
+        funcPlot3.LineWidth = 2;
         plot.Axes.SetLimits(0,
             interval[3],
             decProfile.EvaluateAcceleration((double)viewModel.MasterDec / 2 / viewModel.MasterSpeed) * (1+YRange),
@@ -99,10 +120,26 @@ public partial class MainWindow : Window
         funcPlot1.MaxX = funcPlot2.MinX = interval[1];
         funcPlot2.MaxX = funcPlot3.MinX = interval[2];
         funcPlot3.MaxX = interval[3];
+        funcPlot1.LineWidth = 2;
+        funcPlot2.LineWidth = 2;
+        funcPlot3.LineWidth = 2;
+
+        var accJerkMaxAbs = viewModel.OrderAcc == 3
+            ? accProfile.EvaluateJerk(viewModel.MasterAcc * viewModel.RaAcc / 2 / viewModel.MasterSpeed)
+            : accProfile.EvaluateJerk(0);
+        var decJerkMaxAbs = viewModel.OrderDec == 3
+            ? decProfile.EvaluateJerk(viewModel.MasterDec * viewModel.RaDec / 2 / viewModel.MasterSpeed)
+            : decProfile.EvaluateJerk(0);
+
+        accJerkMaxAbs = Math.Abs(accJerkMaxAbs);
+        decJerkMaxAbs = Math.Abs(decJerkMaxAbs);
+        var jerkAbsMax = Math.Max(accJerkMaxAbs, decJerkMaxAbs);
+
         plot.Axes.SetLimits(0,
             interval[3],
-            accProfile.EvaluateJerk((double)viewModel.MasterAcc * (1-viewModel.RaAcc+0.02) / viewModel.MasterSpeed) * (1+YRange),
-            accProfile.EvaluateJerk((double)viewModel.MasterAcc * viewModel.RaAcc / viewModel.MasterSpeed) * (1+YRange));
+            -jerkAbsMax * (1 + YRange),
+            jerkAbsMax * (1 + YRange));
+        
         PlotJerk.Refresh();
     }
 }

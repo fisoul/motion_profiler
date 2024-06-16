@@ -11,9 +11,34 @@
   
     <Application.Styles>
         <FluentTheme />
+        <Styles>
+            <Style Selector="TextBox.UserPara">
+                <Setter Property="Width" Value="120" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            
+            <Style Selector="Label.UserPara">
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Foreground" Value="Black" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontFamily" Value="新宋体" />
+                <Setter Property="FontWeight" Value="Bold" />
+            </Style>
+            
+            <Style Selector="Slider.Portion">
+                <Setter Property="Width" Value="150"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0,-8,0,0"/>
+                <Setter Property="Minimum" Value="0"/>
+                <Setter Property="Maximum" Value="0.5"/>
+            </Style>
+        </Styles>
     </Application.Styles>
              
     <Application.Resources>
-        
+
     </Application.Resources>
 </Application>
