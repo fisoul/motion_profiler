@@ -5,11 +5,13 @@ VisualStudioVersion = 17.11.34909.67
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MotionProfiler", "MotionProfiler\MotionProfiler.csproj", "{13654914-C328-405C-9E63-E8A0BCDAA6EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MotionProfile_Demo", "MotionProfile_Demo\MotionProfile_Demo.csproj", "{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTDMotionProfiler", "LTDMotionProfiler\LTDMotionProfiler.csproj", "{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MotionProfile_DemoGUI", "MotionProfile_DemoGUI\MotionProfile_DemoGUI.csproj", "{029271F1-F8B2-41B8-98F4-7A01453C3810}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralCalc", "GeneralCalc\GeneralCalc.csproj", "{36ABD618-C52C-4B30-83FD-E72C221A7F1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LTDMath", "LTDMath\LTDMath.csproj", "{36ABD618-C52C-4B30-83FD-E72C221A7F1C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LTD", "LTD", "{809AC0A5-CD94-4AF1-9830-6D96DCD73079}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +38,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{36ABD618-C52C-4B30-83FD-E72C221A7F1C} = {809AC0A5-CD94-4AF1-9830-6D96DCD73079}
+		{CA7472B6-9846-48AF-81C7-F7E7B2FBBA6C} = {809AC0A5-CD94-4AF1-9830-6D96DCD73079}
 	EndGlobalSection
 EndGlobal

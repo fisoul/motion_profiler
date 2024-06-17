@@ -1,4 +1,4 @@
-namespace GeneralCalc;
+namespace LTDMath;
 
 using System;
 using System.Collections.Generic;

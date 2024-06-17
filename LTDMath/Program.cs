@@ -1,5 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using GeneralCalc;
+using LTDMath;
 
 // 原始多项式
 var poly = new Polynomial([0, 1, 2, 3, 4]);
