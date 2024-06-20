@@ -154,10 +154,44 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
             }
         }
     }
+
+    private CamFixedPoint? accP1;
+    public CamFixedPoint? AccP1 
+    { 
+        get => accP1; 
+        private set { SetField(ref accP1, value); }
+    }
+    private CamFixedPoint? accP2;
+    public CamFixedPoint? AccP2 
+    { 
+        get => accP2;
+        private set { SetField(ref accP2, value); } 
+    }
+    
+    private CamFixedPoint? decP1;
+    public CamFixedPoint? DecP1
+    {
+        get => decP1;
+        private set { SetField(ref decP1, value); }
+    }
+    
+    private CamFixedPoint? decP2;
+    public CamFixedPoint? DecP2
+    {
+        get => decP2;
+        private set { SetField(ref decP2, value); }
+    }
+
+
     public bool CalcValid { get; set; }
 
     public void UpdateAutomat(bool force = false)
     {
+        AccP1 = Profile[0].RefPoints[0];
+        AccP2 = Profile[0].RefPoints[1];
+        DecP1 = Profile[2].RefPoints[0];
+        DecP2 = Profile[2].RefPoints[1];
+
         SlaveAcc = (int)(slaveTotal * _slaveAccPercent);
         SlaveDec = (int)(slaveTotal * _slaveDecPercent);
         if (SlaveAcc + SlaveDec > SlaveTotal)

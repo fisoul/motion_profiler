@@ -16,7 +16,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="* 250" Background="AliceBlue">
+    <Grid ColumnDefinitions="* 300" Background="AliceBlue">
         <Grid Grid.Column="0" RowDefinitions="60 *">
             <TextBlock Grid.Row="0" Text="{Binding Greeting}" 
                        HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -31,7 +31,7 @@
         </Grid>
         <StackPanel Grid.Column="1" Background="AliceBlue">
             <!-- 占空 -->
-            <StackPanel Height="100" Orientation="Horizontal">
+            <StackPanel Height="60" Orientation="Horizontal">
             </StackPanel>
             <!-- 主轴周期 -->
             <StackPanel Orientation="Horizontal" Height="40" Margin="10, 20, 10, 10">
@@ -68,6 +68,14 @@
                 <Label Classes="UserPara" Content="加速段Ra" Foreground="RoyalBlue"/>
                 <NumericUpDown Value="{Binding RaAcc}" Width="120" VerticalAlignment="Center" Minimum="0" Maximum="0.5" Increment="0.01"/>
             </StackPanel>
+			
+			<StackPanel>
+				<TextBlock Text="{Binding AccP1}" Margin="20,0,0,0"></TextBlock>
+			</StackPanel>
+			<StackPanel>
+				<TextBlock Text="{Binding AccP2}" Margin="20,0,0,0"></TextBlock>
+			</StackPanel>
+			
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <Label Classes="UserPara" Content="曲线阶数" Foreground="RoyalBlue"/>
                 <NumericUpDown Value="{Binding OrderAcc}" Width="120" VerticalAlignment="Center" Minimum="3" Maximum="4" Increment="1"/>
@@ -77,6 +85,12 @@
                 <Label Classes="UserPara" Content="减速段Ra" Foreground="LimeGreen"/>
                 <NumericUpDown Value="{Binding RaDec}" Width="120" VerticalAlignment="Center" Minimum="0" Maximum="0.5" Increment="0.01"/>
             </StackPanel>
+			<StackPanel>
+				<TextBlock Text="{Binding DecP1}" Margin="20,0,0,0"></TextBlock>
+			</StackPanel>
+			<StackPanel>
+				<TextBlock Text="{Binding DecP2}" Margin="20,0,0,0"></TextBlock>
+			</StackPanel>
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <Label Classes="UserPara" Content="曲线阶数" Foreground="LimeGreen"/>
                 <NumericUpDown Value="{Binding OrderDec}" Width="120" VerticalAlignment="Center" Minimum="3" Maximum="4" Increment="1"/>

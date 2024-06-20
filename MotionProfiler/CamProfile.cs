@@ -140,6 +140,8 @@ public class CamProfile
         var poly1 = ProfileGen.CalcCamPolynomial(p0, p1);
         var poly2 = ProfileGen.CalcCamPolynomial(p1, p2);
         var poly3 = ProfileGen.CalcCamPolynomial(p2, p3);
-        return new CamProfile(1, 1, new[] { poly1, poly2, poly3 });
+        var ret = new CamProfile(1, 1, [poly1, poly2, poly3]);
+        ret.RefPoints = [p1, p2];
+        return ret;
     }
 }
