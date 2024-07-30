@@ -53,16 +53,21 @@
                 <Label Classes="UserPara" Content="从轴加速" Foreground="RoyalBlue"/>
                 <NumericUpDown Value="{Binding SlaveAccPercent}" Width="120" VerticalAlignment="Center" Minimum="0" Maximum="0.49" Increment="0.01"/>
             </StackPanel>
+            <!-- 主轴加速段 -->
+            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
+                <Label Classes="UserPara" Content="主轴加速" Foreground="RoyalBlue"/>
+                <TextBlock Text="{Binding MasterAcc}" VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
             <!-- 从轴减速段 -->
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <Label Classes="UserPara" Content="从轴减速" Foreground="LimeGreen"/>
                 <NumericUpDown Value="{Binding SlaveDecPercent}" Width="120" VerticalAlignment="Center" Minimum="0" Maximum="0.49" Increment="0.01"/>
             </StackPanel>
-            <!-- 从轴匀速段 只读 -->
-            <!-- <StackPanel Orientation="Horizontal" Height="40" Margin="10"> -->
-            <!--     <Label Classes="UserPara" Content="从轴匀速"/> -->
-            <!--     <TextBox Classes="UserPara" Text="{Binding SlaveUni}" IsReadOnly="True"/> -->
-            <!-- </StackPanel> -->
+            <!-- 主轴减速段 -->
+            <StackPanel Orientation="Horizontal" Height="40" Margin="10">
+                <Label Classes="UserPara" Content="主轴减速" Foreground="LimeGreen"/>
+                <TextBlock Text="{Binding MasterDec}" VerticalAlignment="Center"></TextBlock>
+            </StackPanel>
             <!-- 加速段Ra系数 -->
             <StackPanel Orientation="Horizontal" Height="40" Margin="10">
                 <Label Classes="UserPara" Content="加速段Ra" Foreground="RoyalBlue"/>

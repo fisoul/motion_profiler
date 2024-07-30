@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Avalonia.Controls;
 using MotionProfiler;
 using MotionProfile_DemoGUI.ViewModels;
@@ -47,7 +48,6 @@ public partial class MainWindow : Window
         interval[1] = viewModel.MasterAcc / viewModel.MasterSpeed;
         interval[2] = (viewModel.MasterAcc + viewModel.MasterUni) / viewModel.MasterSpeed;
         interval[3] = viewModel.MasterTotal / viewModel.MasterSpeed;
-        
         // Position
         var plot = PlotPosition.Plot;
         plot.PlottableList.Clear();

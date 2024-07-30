@@ -58,61 +58,68 @@ public static class ProfileGen
         ret.XMax = p2.X - p1.X;
         return ret;
     }
-    
+
     /// <summary>
     /// Calculates the symmetric shift for a motion profile.
     /// </summary>
     /// <param name="ra">The ratio value between 0 and 0.5. Default value is 0.5.</param>
     /// <param name="order">The order of the symmetric acceleration curve. Can be 3 or 4. Default value is 3.</param>
-    /// <param name="direction">The direction of the motion. 0 for positive direction, 1 for negative direction. Default value is 0.</param>
+    /// <param name="vin">entry velocity of the profile, only positive value allowed</param>
+    /// <param name="vout">exit velocity of the profile, only positive value allowed</param>
     /// <returns>The calculated symmetric shift as a tuple of two CamFixedPoint objects.</returns>
-    public static (CamFixedPoint, CamFixedPoint) CalcSymmetricShift(double ra = 0.5, int order = 3, int direction = 0)
+    public static (CamFixedPoint, CamFixedPoint) CalcSymmetricShift(double ra = 0.5, double vin = 0, double vout = 1, int order = 3)
     {
         var p1 = new CamFixedPoint();
         var p2 = new CamFixedPoint();
-        if (ra is < 0 or > 0.5)
+        if (ra < 0 || ra > 0.5 || order < 3 || order > 4 || (Math.Abs(vout - vin) < 0.1))
         {
-            ra = 0.5;
+            return (p1, p2);
         }
-        if (order is < 3 or > 4)
-        {
-            order = 3;
-        }
+        var reverse = !(vout > vin);
+        if (reverse)
+            (vin, vout) = (vout, vin);
+        var vDelta = vout - vin;
+        var s = (vout + vin) / 2;
+        double a = 0;
         switch (order)
         {
             case 3:
+                a = vDelta / (1 - ra);
                 // t
                 p1.X = ra;
                 p2.X = 1 - ra;
                 // a    
-                p1.Y2 = 2 / (1 - ra);
-                p2.Y2 = 2 / (1 - ra);
+                p1.Y2 = a;
+                p2.Y2 = a;
                 // v
-                p1.Y1 = ra / (1 - ra);
-                p2.Y1 = (2 - 3 * ra) / (1 - ra);
+                p1.Y1 = a * ra / 2 + vin;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+                p2.Y1 = p1.Y1 + a * (1 - 2 * ra);
                 // s
-                p1.Y = ra * ra / (3 * (1 - ra));
-                p2.Y = ra * ra / (3 * (1 - ra)) + 1 - 2 * ra;
+                p1.Y = a * ra * ra / 6 + vin * ra;
+                p2.Y = p1.Y + (p1.Y1 + p2.Y1) / 2 * (1 - 2 * ra);
                 break;
             case 4:
+                a = vDelta / (1 - 2 * ra / 3);
                 // t
                 p1.X = ra;
                 p2.X = 1 - ra;
                 // a
-                p1.Y2 = 6 / (3 - 2 * ra);
-                p2.Y2 = 6 / (3 - 2 * ra);
-                // p1
-                p1.Y1 = 4 * ra / (3 - 2 * ra);
-                p2.Y1 = (6 - 8 * ra) / (3 - 2 * ra);
-                // p2
-                p1.Y = 3 * ra * ra / (2 * (3 - 2 * ra));
-                p2.Y = (3 * ra * ra / (2 * (3 - 2 * ra))) + 1 - 2 * ra;
+                p1.Y2 = a;
+                p2.Y2 = a;
+                // v
+                //p1.Y1 = a * ra / 3 + vin; //开口向下
+                p1.Y1 = 2 * a * ra / 3 + vin; //开口向上
+                p2.Y1 = p1.Y1 + a * (1 - 2 * ra);
+                // s
+                //p1.Y = a * ra * ra / 12 + vin * ra; //开口向下
+                p1.Y = a * ra * ra / 4 + vin * ra;
+                p2.Y = p1.Y + (p1.Y1 + p2.Y1) / 2 * (1 - 2 * ra);
                 break;
         }
-        if (direction == 0) return (p1, p2);
+        if (!reverse) return (p1, p2);
         (p1.Y2, p2.Y2) = (-p1.Y2, -p2.Y2);
         (p1.Y1, p2.Y1) = (p2.Y1, p1.Y1);
-        (p1.Y, p2.Y) = (1 - p2.Y, 1 - p1.Y);
+        (p1.Y, p2.Y) = (s - p2.Y, s - p1.Y);
         return (p1, p2);
     }
     
@@ -123,21 +130,21 @@ public static class ProfileGen
     /// <returns></returns>
     public static (CamFixedPoint, CamFixedPoint) 计算3阶对称加速曲线(double ra)
     {
-        return CalcSymmetricShift(ra);
+        return CalcSymmetricShift(ra, 0, 1, 3);
     }
 
     public static (CamFixedPoint, CamFixedPoint) 计算3阶对称减速曲线(double ra)
     {
-        return CalcSymmetricShift(ra, order: 3, 1);
+        return CalcSymmetricShift(ra, 0, 1, 3);
     }
     
     public static (CamFixedPoint, CamFixedPoint) 计算4阶对称加速曲线(double ra)
     {
-        return CalcSymmetricShift(ra, 4);
+        return CalcSymmetricShift(ra, 0, 1, 4);
     }
 
     public static (CamFixedPoint, CamFixedPoint) 计算4阶对称减速曲线(double ra)
     {
-        return CalcSymmetricShift(ra, 4, 1);
+        return CalcSymmetricShift(ra, 0, 1, 4);
     }
 }
