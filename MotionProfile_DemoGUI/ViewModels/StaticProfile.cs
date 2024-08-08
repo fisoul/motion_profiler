@@ -1,4 +1,8 @@
-﻿namespace MotionProfiler;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MotionProfiler;
+
+namespace MotionProfile_DemoGUI.ViewModels;
 
 public class StaticProfile
 {

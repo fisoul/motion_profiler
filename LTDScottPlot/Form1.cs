@@ -21,7 +21,7 @@ public partial class Form1 : Form
 
         CamFixedPoint p1 = new(0, 0, 0, 0);
         CamFixedPoint p2 = new(13680, 19700, 100000, 0);
-        var profile = ProfileGen.CalcCamPolynomial(p1, p2, 5);
+        var profile = ProfileGen.Calc5thPolynomial(p1, p2, 5);
         Console.WriteLine(profile);
         var fp = plot.Add.Function(x => profile.Evaluate(x));
         fp.MinX = 0;

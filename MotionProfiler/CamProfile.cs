@@ -13,24 +13,6 @@ public class CamProfile
 
     // B&R ACP10 Limited to 128 (64, prior to V5.030)
     public List<CamPolynomial> PolynomialData { get; set; } = [];
-    public CamFixedPoint[]? RefPoints { get; set; }
-
-    /// <summary>
-    /// Construct from given points
-    /// </summary>
-    public CamProfile(IEnumerable<CamFixedPoint> points)
-    {
-        RefPoints = points.ToArray();
-        Array.Sort(RefPoints, (p1, p2) => (int)(p1.X - p2.X));
-        for (var i = 0; i < RefPoints.Length - 1; i++)
-        {
-            PolynomialData.Add(ProfileGen.CalcCamPolynomial(RefPoints[i], RefPoints[i + 1]));
-        }
-        // warning here, last [] x,y must be integer
-        // MasterPeriod is Integer, MasterFactor is Integer, so new MasterPeriod is always Integer
-        MasterPeriod = (int)RefPoints[-1].X;
-        SlavePeriod = (int)RefPoints[-1].Y;
-    }
     
     /// <summary>
     /// Construct from calculated polynomials
@@ -137,11 +119,10 @@ public class CamProfile
             p0 = new CamFixedPoint(0, 0, 2);
             p3 = new CamFixedPoint(1, 1);
         }
-        var poly1 = ProfileGen.CalcCamPolynomial(p0, p1);
-        var poly2 = ProfileGen.CalcCamPolynomial(p1, p2);
-        var poly3 = ProfileGen.CalcCamPolynomial(p2, p3);
+        var poly1 = ProfileGen.Calc5thPolynomial(p0, p1);
+        var poly2 = ProfileGen.Calc5thPolynomial(p1, p2);
+        var poly3 = ProfileGen.Calc5thPolynomial(p2, p3);
         var ret = new CamProfile(1, 1, [poly1, poly2, poly3]);
-        ret.RefPoints = [p1, p2];
         return ret;
     }
 }

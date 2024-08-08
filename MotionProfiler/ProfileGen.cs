@@ -1,9 +1,55 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-
+﻿using MathNet.Numerics.Integration;
+using MathNet.Numerics.LinearAlgebra;
 namespace MotionProfiler;
 
 public static class ProfileGen
 {
+    public static CamProfile CreateCamProfile(IEnumerable<CamPolynomial> polynomials)
+    {
+
+        return null;
+    }
+
+    public static CamPolynomial? CalcCamPolynomialGeneric(CamFixedPoint p1, CamFixedPoint p2, MotionRule motionRule = MotionRule.PolynomialOrder5, double lambda = 0.5)
+    {
+        if (!CheckMotionRule(p1, p2, motionRule)) 
+            return null;
+        var ret = new CamPolynomial();
+        switch (motionRule)
+        {
+            case MotionRule.StraightLine:
+                break;
+            case MotionRule.PolynomialOrder5:
+                ret = Calc5thPolynomial(p1, p2);
+                break;
+            case MotionRule.Even:
+                break;
+            case MotionRule.QuadraticParabola:
+                break;
+            case MotionRule.SimpleSine:
+                break;
+            case MotionRule.SlopingSine:
+                break;
+            case MotionRule.ModifiedSine:
+                break;
+            case MotionRule.SimpleTrapezoid:
+                break;
+            case MotionRule.ModifiedTrapezoid:
+                break;
+            case MotionRule.HarmonicCombination:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(motionRule), motionRule, null);
+        }
+        return ret;
+    }
+
+    private static bool CheckMotionRule(CamFixedPoint p1, CamFixedPoint p2, MotionRule motionRule)
+    {
+
+        return true;
+    }
+    
     /// <summary>
     /// Calculates a CamPolynomial based on two CamFixedPoint objects and an order value.
     /// </summary>
@@ -11,7 +57,7 @@ public static class ProfileGen
     /// <param name="p2">The second CamFixedPoint object.</param>
     /// <param name="order">The order of the polynomial. Can be 3 or 5. Default value is 5.</param>
     /// <returns>A CamPolynomial object representing the calculated polynomial.</returns>
-    public static CamPolynomial CalcCamPolynomial(CamFixedPoint p1, CamFixedPoint p2, int order = 5)
+    public static CamPolynomial Calc5thPolynomial(CamFixedPoint p1, CamFixedPoint p2, int order = 5)
     {
         var ret = new CamPolynomial(6);
         if (p1.Equals(p2))

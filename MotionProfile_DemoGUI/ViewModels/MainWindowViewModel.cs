@@ -187,10 +187,10 @@ public sealed class MainWindowViewModel : INotifyPropertyChanged
 
     public void UpdateAutomat(bool force = false)
     {
-        AccP1 = Profile[0].RefPoints[0];
-        AccP2 = Profile[0].RefPoints[1];
-        DecP1 = Profile[2].RefPoints[0];
-        DecP2 = Profile[2].RefPoints[1];
+        // AccP1 = Profile[0].RefPoints[0];
+        // AccP2 = Profile[0].RefPoints[1];
+        // DecP1 = Profile[2].RefPoints[0];
+        // DecP2 = Profile[2].RefPoints[1];
 
         SlaveAcc = (int)(slaveTotal * _slaveAccPercent);
         SlaveDec = (int)(slaveTotal * _slaveDecPercent);
