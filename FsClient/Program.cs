@@ -3,9 +3,15 @@
 using System.Net;
 using System.Net.Sockets;
 
-var clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-Console.WriteLine("Start Async Connection");
-await clientSocket.ConnectAsync(new IPEndPoint(IPAddress.Loopback, 10086));
+var serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+serverSocket.Bind(new IPEndPoint(IPAddress.Any, 10086));
+serverSocket.Listen(10);
 
+while (true)
+{
+    var client = serverSocket.Accept();
+    Console.WriteLine(client.RemoteEndPoint);
+}
+// Console.WriteLine("Start Async Connection");
+// await clientSocket.ConnectAsync(new IPEndPoint(IPAddress.Loopback, 10086));
 
-Console.WriteLine("Hello, World!");

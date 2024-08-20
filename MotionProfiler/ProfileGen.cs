@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.Integration;
-using MathNet.Numerics.LinearAlgebra;
+﻿using MathNet.Numerics.LinearAlgebra;
 namespace MotionProfiler;
 
 public static class ProfileGen
@@ -57,6 +56,7 @@ public static class ProfileGen
     /// <param name="p2">The second CamFixedPoint object.</param>
     /// <param name="order">The order of the polynomial. Can be 3 or 5. Default value is 5.</param>
     /// <returns>A CamPolynomial object representing the calculated polynomial.</returns>
+    // ReSharper disable once InconsistentNaming
     public static CamPolynomial Calc5thPolynomial(CamFixedPoint p1, CamFixedPoint p2, int order = 5)
     {
         var ret = new CamPolynomial(6);
@@ -105,6 +105,14 @@ public static class ProfileGen
         return ret;
     }
 
+    public static List<CamPolynomial> CalcTrapezoid(double vIn, double vOut, double sMaster, double sSlave, 
+                                                    double vMax, double vMin, double a1Max, double a2Max)
+    {
+        List<CamPolynomial> ret = [];
+        
+        return ret;
+    }
+    
     /// <summary>
     /// Calculates the symmetric shift for a motion profile.
     /// </summary>
@@ -126,7 +134,7 @@ public static class ProfileGen
             (vin, vout) = (vout, vin);
         var vDelta = vout - vin;
         var s = (vout + vin) / 2;
-        double a = 0;
+        double a;
         switch (order)
         {
             case 3:
@@ -176,12 +184,12 @@ public static class ProfileGen
     /// <returns></returns>
     public static (CamFixedPoint, CamFixedPoint) 计算3阶对称加速曲线(double ra)
     {
-        return CalcSymmetricShift(ra, 0, 1, 3);
+        return CalcSymmetricShift(ra);
     }
 
     public static (CamFixedPoint, CamFixedPoint) 计算3阶对称减速曲线(double ra)
     {
-        return CalcSymmetricShift(ra, 0, 1, 3);
+        return CalcSymmetricShift(ra);
     }
     
     public static (CamFixedPoint, CamFixedPoint) 计算4阶对称加速曲线(double ra)
